@@ -997,6 +997,7 @@ _PyStaticObjects_CheckRefcnt(PyInterpreterState *interp) {
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(importlib));
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(in_fd));
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(incoming));
+    _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(index));
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(indexgroup));
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(inf));
     _PyStaticObject_CheckRefcnt((PyObject *)&_Py_ID(infer_variance));

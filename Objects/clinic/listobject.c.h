@@ -366,6 +366,79 @@ list_remove(PyListObject *self, PyObject *value)
     return return_value;
 }
 
+PyDoc_STRVAR(list_get__doc__,
+"get($self, /, index, default=None)\n"
+"--\n"
+"\n"
+"Get item from index, when index is holding no value then default is returned");
+
+#define LIST_GET_METHODDEF    \
+    {"get", _PyCFunction_CAST(list_get), METH_FASTCALL|METH_KEYWORDS, list_get__doc__},
+
+static PyObject *
+list_get_impl(PyListObject *self, Py_ssize_t index, PyObject *default_value);
+
+static PyObject *
+list_get(PyListObject *self, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
+{
+    PyObject *return_value = NULL;
+    #if defined(Py_BUILD_CORE) && !defined(Py_BUILD_CORE_MODULE)
+
+    #define NUM_KEYWORDS 2
+    static struct {
+        PyGC_Head _this_is_not_used;
+        PyObject_VAR_HEAD
+        PyObject *ob_item[NUM_KEYWORDS];
+    } _kwtuple = {
+        .ob_base = PyVarObject_HEAD_INIT(&PyTuple_Type, NUM_KEYWORDS)
+        .ob_item = { &_Py_ID(index), &_Py_ID(default), },
+    };
+    #undef NUM_KEYWORDS
+    #define KWTUPLE (&_kwtuple.ob_base.ob_base)
+
+    #else  // !Py_BUILD_CORE
+    #  define KWTUPLE NULL
+    #endif  // !Py_BUILD_CORE
+
+    static const char * const _keywords[] = {"index", "default", NULL};
+    static _PyArg_Parser _parser = {
+        .keywords = _keywords,
+        .fname = "get",
+        .kwtuple = KWTUPLE,
+    };
+    #undef KWTUPLE
+    PyObject *argsbuf[2];
+    Py_ssize_t noptargs = nargs + (kwnames ? PyTuple_GET_SIZE(kwnames) : 0) - 1;
+    Py_ssize_t index;
+    PyObject *default_value = Py_None;
+
+    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser, 1, 2, 0, argsbuf);
+    if (!args) {
+        goto exit;
+    }
+    {
+        Py_ssize_t ival = -1;
+        PyObject *iobj = _PyNumber_Index(args[0]);
+        if (iobj != NULL) {
+            ival = PyLong_AsSsize_t(iobj);
+            Py_DECREF(iobj);
+        }
+        if (ival == -1 && PyErr_Occurred()) {
+            goto exit;
+        }
+        index = ival;
+    }
+    if (!noptargs) {
+        goto skip_optional_pos;
+    }
+    default_value = args[1];
+skip_optional_pos:
+    return_value = list_get_impl(self, index, default_value);
+
+exit:
+    return return_value;
+}
+
 PyDoc_STRVAR(list___init____doc__,
 "list(iterable=(), /)\n"
 "--\n"
@@ -439,4 +512,4 @@ list___reversed__(PyListObject *self, PyObject *Py_UNUSED(ignored))
 {
     return list___reversed___impl(self);
 }
-/*[clinic end generated code: output=854957a1d4a89bbd input=a9049054013a1b77]*/
+/*[clinic end generated code: output=3ad1705276c846a3 input=a9049054013a1b77]*/

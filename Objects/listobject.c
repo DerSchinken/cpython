@@ -3396,6 +3396,26 @@ list_richcompare(PyObject *v, PyObject *w, int op)
 }
 
 /*[clinic input]
+list.get
+
+    index: Py_ssize_t
+    default: object = None
+
+Get item from index, when index is holding no value then default is returned
+[clinic start generated code]*/
+
+static PyObject *
+list_get_impl(PyListObject *self, Py_ssize_t index, PyObject *default_value)
+/*[clinic end generated code: output=6d252b9fe2b5c8fa input=a9072553901c36f3]*/
+ {
+    if (index > PyList_GET_SIZE(self)) {
+        return default_value;
+    }
+
+    return PyList_GET_ITEM(self, index);
+}
+
+/*[clinic input]
 list.__init__
 
     iterable: object(c_default="NULL") = ()
@@ -3490,6 +3510,7 @@ static PyMethodDef list_methods[] = {
     LIST_COUNT_METHODDEF
     LIST_REVERSE_METHODDEF
     LIST_SORT_METHODDEF
+    LIST_GET_METHODDEF
     {"__class_getitem__", Py_GenericAlias, METH_O|METH_CLASS, PyDoc_STR("See PEP 585")},
     {NULL,              NULL}           /* sentinel */
 };
